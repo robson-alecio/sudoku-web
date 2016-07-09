@@ -16,6 +16,22 @@ public class SudokuSolver {
 	}
 
 	public SudokuPuzzle solve(String boardRepresentation) {
+		
+		SudokuPuzzle puzzleSaved = SudokuPuzzleRepository.getInstance().find(boardRepresentation);
+		if (puzzleSaved != null)
+			return puzzleSaved;
+		
+		SudokuBoard problemBoard = new SudokuBoard(boardRepresentation);
+		SudokuBoard generatedSolution = generateSolution(problemBoard);
+		
+		SudokuPuzzle puzzle = new SudokuPuzzle(problemBoard, generatedSolution);
+		
+		SudokuPuzzleRepository.getInstance().save(puzzle);
+		
+		return puzzle;
+	}
+
+	protected SudokuBoard generateSolution(SudokuBoard problemBoard) {
 		return null;
 	}
 
