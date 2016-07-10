@@ -331,7 +331,7 @@ public class SudokuBoard {
 					return -1;
 				
 				boolean columnAlreadyFound = targetColumn > -1;
-				boolean differentColumn = targetColumn != line;
+				boolean differentColumn = targetColumn != column;
 				if (cellValue == EMPTY_VALUE && columnAlreadyFound && differentColumn)
 					return -1;
 				
