@@ -5,9 +5,13 @@ import java.util.List;
 
 public class SudokuBoard {
 
-	private static final int BOARD_SIZE = 9;
+	public static final int BOARD_SIZE = 9;
+	private static final int EMPTY_VALUE = 0;
+	private static final int MARK_VALUE = -1;
+	
 	private static final String MSG_LINEAR_INCONSISTENCY = "Número %d aparece %d vezes na %s %d.";
 	private static final String MSG_SECTOR_INCONSISTENCY = "Número %d aparece %d vezes no setor %s.";
+	private static final Object PRINT_DIVISION_ROW = "+-----------+-----------+-----------+\n";
 
 	private int[][] cells;
 
@@ -27,16 +31,25 @@ public class SudokuBoard {
 		validate();
 	}
 
+	private SudokuBoard(int[][] cells) {
+		this.cells = cells;
+	}
+
 	private void validate() {
+		List<String> inconsistencies = findInconsistencies();
+
+		if (!inconsistencies.isEmpty())
+			throw new InvalidInputBoardException(inconsistencies);
+	}
+
+	private List<String> findInconsistencies() {
 		List<String> inconsistencies = new ArrayList<>();
 		for (int number = 1; number <= BOARD_SIZE; number++) {
 			inconsistencies.addAll(findRepeatedOnLines(number));
 			inconsistencies.addAll(findRepeatedOnColumns(number));
 			inconsistencies.addAll(findRepeatedOnSectors(number));
 		}
-
-		if (!inconsistencies.isEmpty())
-			throw new InvalidInputBoardException(inconsistencies);
+		return inconsistencies;
 	}
 
 	private List<String> findRepeatedOnLines(int number) {
@@ -109,6 +122,118 @@ public class SudokuBoard {
 	@Override
 	public String toString() {
 		return getRepresentation();
+	}
+
+	public SudokuBoard copy() {
+		return new SudokuBoard(copyCells(cells));
+	}
+
+	private int[][] copyCells(int[][] cells) {
+		int[][] temp = new int[9][9];
+		for (int line = 0; line < BOARD_SIZE; line++) {
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				temp[line][column] = cells[line][column];
+			}
+		}
+		return temp;
+	}
+
+	public boolean isSolved() {
+		return !hasEmptyCells() && findInconsistencies().isEmpty();
+	}
+
+	private boolean hasEmptyCells() {
+		for (int line = 0; line < BOARD_SIZE; line++) {
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				if (cells[line][column] == EMPTY_VALUE)
+					return true;
+			}
+		}		
+		return false;
+	}
+
+	public String print() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(PRINT_DIVISION_ROW);
+		
+		for (int line = 0; line < BOARD_SIZE; line++) {
+			sb.append("| ");
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				int intValue = cells[line][column];
+				String printValue = intValue == EMPTY_VALUE ? " " : String.valueOf(intValue);
+				String format = intValue < 0 ? "%s " : " %s ";
+				sb.append(String.format(format, printValue));
+				
+				if (column == 2 || column == 5)
+					sb.append(" | ");
+			}
+			sb.append(" |\n");
+			
+			if (line == 2 || line == 5)
+				sb.append(PRINT_DIVISION_ROW);
+		}
+		sb.append(PRINT_DIVISION_ROW);
+		
+		return sb.toString();
+	}
+
+	public BoardPoint eval(int number, BoardSector sector) {
+		BoardPoint targetPoint = null;
+		
+		for (int line = sector.getStart().line; line <= sector.getEnd().line; line++) {
+			for (int column = sector.getStart().column; column <= sector.getEnd().column; column++) {
+				int cellValue = cells[line][column];
+				if (cellValue == number)
+					return null;
+				
+				if (cellValue == EMPTY_VALUE && targetPoint != null)
+					return null;
+				
+				if (cellValue == EMPTY_VALUE && targetPoint == null)
+					targetPoint = new BoardPoint(line, column);
+			}
+		}
+		
+		return targetPoint;
+	}
+
+	public SudokuBoard set(int number, BoardPoint point) {
+		int[][] newCells = copyCells(cells);
+		newCells[point.line][point.column] = number;
+		return new SudokuBoard(newCells);
+	}
+
+	public SudokuBoard mark(int number) {
+		List<Integer> linesContaingNumber = new ArrayList<>();
+		List<Integer> columnsContaingNumber = new ArrayList<>();
+		for (int line = 0; line < BOARD_SIZE; line++) {
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				if (cells[line][column] == number) {
+					linesContaingNumber.add(line);
+					columnsContaingNumber.add(column);
+				}
+			}
+		}
+		
+		int[][] cellsToMark = copyCells(cells);
+		
+		for (int column : columnsContaingNumber) {
+			for (int line = 0; line < BOARD_SIZE; line++) {
+				if (cellsToMark[line][column] == EMPTY_VALUE) {
+					cellsToMark[line][column] = MARK_VALUE;
+				}
+			}
+		}
+		
+		for (int line : linesContaingNumber) {
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				if (cellsToMark[line][column] == EMPTY_VALUE) {
+					cellsToMark[line][column] = MARK_VALUE;
+				}
+			}
+		}
+		
+		return new SudokuBoard(cellsToMark);
 	}
 
 }
