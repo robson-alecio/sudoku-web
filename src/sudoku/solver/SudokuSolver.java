@@ -1,5 +1,7 @@
 package sudoku.solver;
 
+import java.util.List;
+
 public class SudokuSolver {
 
 	private static SudokuSolver instance;
@@ -51,28 +53,14 @@ public class SudokuSolver {
 		if (freshNewProposal.isSolved())
 			return freshNewProposal;
 		
-		return freshNewProposal;
-	}
-
-	private SudokuBoard fillUsingSimpleMarkHeuristic(SudokuBoard actualProposal) {
-		SudokuBoard solutionProposal = actualProposal.copy();
-		boolean changesHappened = false;
-		do {
-			changesHappened = false;
-			for (int number = 1; number <= SudokuBoard.BOARD_SIZE; number++) {
-				SudokuBoard markedBoard = solutionProposal.mark(number);
-				log(markedBoard);
-				for (BoardSector sector: BoardSector.values()) {
-					BoardPoint point = markedBoard.eval(number, sector);
-					if (point != null) {
-						solutionProposal = solutionProposal.set(number, point);
-						changesHappened = true;
-					}
-				}
-			}
-		} while (changesHappened);
+		SudokuBoard brandNewProposal = fillUsingLinesAndColumnInferedHeuristic(freshNewProposal);
 		
-		return solutionProposal;
+		log(brandNewProposal);
+		
+		if (brandNewProposal.isSolved())
+			return brandNewProposal;
+		
+		return brandNewProposal;
 	}
 
 	private SudokuBoard fillOneCellLeftOnSectors(SudokuBoard solutionProposal) {
@@ -87,7 +75,84 @@ public class SudokuSolver {
 		return solutionProposal;
 	}
 
+	private SudokuBoard fillUsingSimpleMarkHeuristic(SudokuBoard actualProposal) {
+		SudokuBoard solutionProposal = actualProposal.copy();
+		
+		boolean changesHappened = false;
+		do {
+			changesHappened = false;
+			for (int number = 1; number <= SudokuBoard.BOARD_SIZE; number++) {
+				SudokuBoard markedBoard = solutionProposal.simpleMark(number);
+				log(number, markedBoard);
+				for (BoardSector sector: BoardSector.values()) {
+					BoardPoint point = markedBoard.eval(number, sector);
+					if (point != null) {
+						solutionProposal = solutionProposal.set(number, point);
+						changesHappened = true;
+					}
+				}
+			}
+		} while (changesHappened);
+		
+		return solutionProposal;
+	}
+
+	private SudokuBoard fillUsingLinesAndColumnInferedHeuristic(SudokuBoard actualProposal) {
+		SudokuBoard solutionProposal = actualProposal.copy();
+		
+		boolean changesHappened = false;
+		do {
+			changesHappened = false;
+			for (int number = 1; number <= SudokuBoard.BOARD_SIZE; number++) {
+				SudokuBoard markedBoard = solutionProposal.simpleMark(number);
+				log(number, markedBoard);
+				for (BoardSector sector: BoardSector.values()) {
+					BoardPoint point = markedBoard.eval(number, sector);
+					if (point != null) {
+						solutionProposal = solutionProposal.set(number, point);
+						changesHappened = true;
+					}
+				}
+				if (!changesHappened) {
+					List<SudokuBoard> inferedLinesBoards = markedBoard.inferLinesAndMark(number);
+					for (SudokuBoard inferedLinesMarkedBoard : inferedLinesBoards) {
+						log(number, inferedLinesMarkedBoard);
+						for (BoardSector sector: BoardSector.values()) {
+							BoardPoint point = inferedLinesMarkedBoard.eval(number, sector);
+							if (point != null) {
+								solutionProposal = solutionProposal.set(number, point);
+								changesHappened = true;
+							}
+						}
+					}
+				}
+				if (!changesHappened) {
+					List<SudokuBoard> inferedColumnsBoards = markedBoard.inferColumnsAndMark(number);
+					for (SudokuBoard inferedColumnsMarkedBoard : inferedColumnsBoards) {
+						log(number, inferedColumnsMarkedBoard);
+						for (BoardSector sector: BoardSector.values()) {
+							BoardPoint point = inferedColumnsMarkedBoard.eval(number, sector);
+							if (point != null) {
+								solutionProposal = solutionProposal.set(number, point);
+								changesHappened = true;
+							}
+						}
+					}
+				}
+			}
+		} while (changesHappened);
+	
+		return solutionProposal;
+	}
+
 	private void log(SudokuBoard board) {
+		System.out.println("===================================");
+		System.out.println(board.print());
+	}
+	
+	private void log(int number, SudokuBoard board) {
+		System.out.println("===================================");
+		System.out.printf("Analizando numero: %d\n", number);
 		System.out.println(board.print());
 	}
 

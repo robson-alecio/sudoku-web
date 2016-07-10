@@ -7,7 +7,8 @@ public class SudokuBoard {
 
 	public static final int BOARD_SIZE = 9;
 	private static final int EMPTY_VALUE = 0;
-	private static final int MARK_VALUE = -1;
+	private static final int SIMPLE_MARK_VALUE = -1;
+	private static final int INFERED_MARK_VALUE = -2;
 	
 	private static final String MSG_LINEAR_INCONSISTENCY = "Número %d aparece %d vezes na %s %d.";
 	private static final String MSG_SECTOR_INCONSISTENCY = "Número %d aparece %d vezes no setor %s.";
@@ -203,7 +204,7 @@ public class SudokuBoard {
 		return new SudokuBoard(newCells);
 	}
 
-	public SudokuBoard mark(int number) {
+	public SudokuBoard simpleMark(int number) {
 		List<Integer> linesContaingNumber = new ArrayList<>();
 		List<Integer> columnsContaingNumber = new ArrayList<>();
 		for (int line = 0; line < BOARD_SIZE; line++) {
@@ -220,7 +221,7 @@ public class SudokuBoard {
 		for (int column : columnsContaingNumber) {
 			for (int line = 0; line < BOARD_SIZE; line++) {
 				if (cellsToMark[line][column] == EMPTY_VALUE) {
-					cellsToMark[line][column] = MARK_VALUE;
+					cellsToMark[line][column] = SIMPLE_MARK_VALUE;
 				}
 			}
 		}
@@ -228,12 +229,109 @@ public class SudokuBoard {
 		for (int line : linesContaingNumber) {
 			for (int column = 0; column < BOARD_SIZE; column++) {
 				if (cellsToMark[line][column] == EMPTY_VALUE) {
-					cellsToMark[line][column] = MARK_VALUE;
+					cellsToMark[line][column] = SIMPLE_MARK_VALUE;
 				}
 			}
 		}
 		
 		return new SudokuBoard(cellsToMark);
+	}
+
+	public List<SudokuBoard> inferLinesAndMark(int number) {
+		List<Integer> inferedLinesForNumber = new ArrayList<>();
+		
+		for (BoardSector sector : BoardSector.values()) {
+			int line = evalLine(number, sector);
+			if (line > -1)
+				inferedLinesForNumber.add(line);
+		}
+
+
+		List<SudokuBoard> list = new ArrayList<>();
+		
+		for (int line : inferedLinesForNumber) {
+			int[][] cellsToMark = copyCells(cells);
+			
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				if (cellsToMark[line][column] == EMPTY_VALUE) {
+					cellsToMark[line][column] = INFERED_MARK_VALUE;
+				}
+			}
+			
+			list.add(new SudokuBoard(cellsToMark));
+		}
+		
+		return list;
+	}
+
+	private int evalLine(int number, BoardSector sector) {
+		int targetLine = -1;
+		
+		for (int line = sector.getStart().line; line <= sector.getEnd().line; line++) {
+			for (int column = sector.getStart().column; column <= sector.getEnd().column; column++) {
+				int cellValue = cells[line][column];
+				if (cellValue == number)
+					return -1;
+				
+				boolean lineAlreadyFound = targetLine > -1;
+				boolean differentLine = targetLine != line;
+				if (cellValue == EMPTY_VALUE && lineAlreadyFound && differentLine)
+					return -1;
+				
+				if (cellValue == EMPTY_VALUE && targetLine == -1)
+					targetLine = line;
+			}
+		}
+		
+		return targetLine;
+	}
+
+	public List<SudokuBoard> inferColumnsAndMark(int number) {
+		List<Integer> inferedColumnsForNumber = new ArrayList<>();
+		
+		for (BoardSector sector : BoardSector.values()) {
+			int column = evalColumn(number, sector);
+			if (column > -1)
+				inferedColumnsForNumber.add(column);
+		}
+
+
+		List<SudokuBoard> list = new ArrayList<>();
+		for (int column : inferedColumnsForNumber) {
+			int[][] cellsToMark = copyCells(cells);
+			
+			for (int line = 0; line < BOARD_SIZE; line++) {
+				if (cellsToMark[line][column] == EMPTY_VALUE) {
+					cellsToMark[line][column] = INFERED_MARK_VALUE;
+				}
+			}
+			
+			list.add(new SudokuBoard(cellsToMark));
+		}
+		
+		return list;
+	}
+
+	private int evalColumn(int number, BoardSector sector) {
+		int targetColumn = -1;
+		
+		for (int line = sector.getStart().line; line <= sector.getEnd().line; line++) {
+			for (int column = sector.getStart().column; column <= sector.getEnd().column; column++) {
+				int cellValue = cells[line][column];
+				if (cellValue == number)
+					return -1;
+				
+				boolean columnAlreadyFound = targetColumn > -1;
+				boolean differentColumn = targetColumn != line;
+				if (cellValue == EMPTY_VALUE && columnAlreadyFound && differentColumn)
+					return -1;
+				
+				if (cellValue == EMPTY_VALUE && targetColumn == -1)
+					targetColumn = column;
+			}
+		}
+		
+		return targetColumn;
 	}
 
 }
