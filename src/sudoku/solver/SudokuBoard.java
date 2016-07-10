@@ -244,7 +244,7 @@ public class SudokuBoard {
 			int line = evalLine(number, sector);
 			if (line > -1) {
 				inferedLinesForNumber.add(line);
-				log(number, "linha", sector);
+				log(number, "linha", line, sector);
 			}
 		}
 
@@ -266,8 +266,8 @@ public class SudokuBoard {
 		return list;
 	}
 
-	private void log(int number, String type, BoardSector sector) {
-		System.out.printf("Inferido %d em %s do setor %s.\n", number, type, sector);
+	private void log(int number, String type, int value, BoardSector sector) {
+		System.out.printf("Inferido %d em %s %d do setor %s.\n", number, type, value, sector);
 	}
 
 	private int evalLine(int number, BoardSector sector) {
@@ -299,9 +299,8 @@ public class SudokuBoard {
 			int column = evalColumn(number, sector);
 			if (column > -1) {
 				inferedColumnsForNumber.add(column);
-				log(number, "coluna", sector);
+				log(number, "coluna", column, sector);
 			}
-
 		}
 
 
@@ -341,6 +340,45 @@ public class SudokuBoard {
 		}
 		
 		return targetColumn;
+	}
+
+	public SudokuBoard inferFullPlan(int number) {
+		List<Integer> inferedLinesForNumber = new ArrayList<>();
+		List<Integer> inferedColumnsForNumber = new ArrayList<>();
+		
+		for (BoardSector sector : BoardSector.values()) {
+			int line = evalLine(number, sector);
+			if (line > -1) {
+				inferedLinesForNumber.add(line);
+				log(number, "linha", line, sector);
+			}
+
+			int column = evalColumn(number, sector);
+			if (column > -1) {
+				inferedColumnsForNumber.add(column);
+				log(number, "coluna", column, sector);
+			}
+		}
+
+		int[][] cellsToMark = copyCells(cells);
+
+		for (int line : inferedLinesForNumber) {
+			for (int column = 0; column < BOARD_SIZE; column++) {
+				if (cellsToMark[line][column] == EMPTY_VALUE) {
+					cellsToMark[line][column] = INFERED_MARK_VALUE;
+				}
+			}
+		}
+
+		for (int column : inferedColumnsForNumber) {
+			for (int line = 0; line < BOARD_SIZE; line++) {
+				if (cellsToMark[line][column] == EMPTY_VALUE) {
+					cellsToMark[line][column] = INFERED_MARK_VALUE;
+				}
+			}
+		}
+		
+		return new SudokuBoard(cellsToMark);
 	}
 
 }

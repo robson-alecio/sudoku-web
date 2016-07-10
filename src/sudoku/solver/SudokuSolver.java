@@ -113,17 +113,25 @@ public class SudokuSolver {
 				SudokuBoard markedBoard = solutionProposal.simpleMark(number);
 				log(number, markedBoard);
 				solutionProposal = fillOnCellLeftWith(number, solutionProposal, markedBoard);
+				log(solutionProposal);
 				
-				List<SudokuBoard> inferedLinesBoards = markedBoard.inferLinesAndMark(number);
+				List<SudokuBoard> inferedLinesBoards = solutionProposal.simpleMark(number).inferLinesAndMark(number);
 				for (SudokuBoard inferedLinesMarkedBoard : inferedLinesBoards) {
 					log(number, inferedLinesMarkedBoard);
 					solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedLinesMarkedBoard);
+					log(solutionProposal);
 				}
-				List<SudokuBoard> inferedColumnsBoards = markedBoard.inferColumnsAndMark(number);
+				List<SudokuBoard> inferedColumnsBoards = solutionProposal.simpleMark(number).inferColumnsAndMark(number);
 				for (SudokuBoard inferedColumnsMarkedBoard : inferedColumnsBoards) {
 					log(number, inferedColumnsMarkedBoard);
 					solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);
+					log(solutionProposal);
 				}
+				
+				SudokuBoard fullPlan = solutionProposal.simpleMark(number).inferFullPlan(number);
+				log(number, fullPlan);
+				solutionProposal = fillOnCellLeftWith(number, solutionProposal, fullPlan);
+				log(solutionProposal);
 			}
 		} while (!solutionProposal.getRepresentation().equals(initialRepresentation));
 	
