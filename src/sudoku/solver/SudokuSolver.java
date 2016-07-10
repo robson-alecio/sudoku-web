@@ -115,18 +115,14 @@ public class SudokuSolver {
 				solutionProposal = fillOnCellLeftWith(number, solutionProposal, markedBoard);
 				log(solutionProposal);
 				
-				List<SudokuBoard> inferedLinesBoards = solutionProposal.simpleMark(number).inferLinesAndMark(number);
-				for (SudokuBoard inferedLinesMarkedBoard : inferedLinesBoards) {
-					log(number, inferedLinesMarkedBoard);
-					solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedLinesMarkedBoard);
-					log(solutionProposal);
-				}
-				List<SudokuBoard> inferedColumnsBoards = solutionProposal.simpleMark(number).inferColumnsAndMark(number);
-				for (SudokuBoard inferedColumnsMarkedBoard : inferedColumnsBoards) {
-					log(number, inferedColumnsMarkedBoard);
-					solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);
-					log(solutionProposal);
-				}
+				solutionProposal = applyLineInference(solutionProposal, number);
+				log(solutionProposal);
+				
+				solutionProposal = applyColumnInference(solutionProposal, number);
+				log(solutionProposal);
+				
+				solutionProposal = applyCrossedInference(solutionProposal, number);
+				log(solutionProposal);
 				
 				SudokuBoard fullPlan = solutionProposal.simpleMark(number).inferFullPlan(number);
 				log(number, fullPlan);
@@ -138,6 +134,36 @@ public class SudokuSolver {
 		return solutionProposal;
 	}
 
+	private SudokuBoard applyLineInference(SudokuBoard solutionProposal, int number) {
+		List<SudokuBoard> inferedLinesBoards = solutionProposal.simpleMark(number).inferLinesAndMark(number);
+		for (SudokuBoard inferedLinesMarkedBoard : inferedLinesBoards) {
+			log(number, inferedLinesMarkedBoard);
+			solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedLinesMarkedBoard);
+			log(solutionProposal);
+		}
+		return solutionProposal;
+	}
+
+	private SudokuBoard applyColumnInference(SudokuBoard solutionProposal, int number) {
+		List<SudokuBoard> inferedColumnsBoards = solutionProposal.simpleMark(number).inferColumnsAndMark(number);
+		for (SudokuBoard inferedColumnsMarkedBoard : inferedColumnsBoards) {
+			log(number, inferedColumnsMarkedBoard);
+			solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);
+			log(solutionProposal);
+		}
+		return solutionProposal;
+	}
+
+	private SudokuBoard applyCrossedInference(SudokuBoard solutionProposal, int number) {
+		List<SudokuBoard> crossedInferedBoards = solutionProposal.simpleMark(number).inferCrossedAndMark(number);
+		for (SudokuBoard inferedColumnsMarkedBoard : crossedInferedBoards) {
+			log(number, inferedColumnsMarkedBoard);
+			solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);
+			log(solutionProposal);
+		}
+		return solutionProposal;
+	}
+	
 	private void log(SudokuBoard board) {
 		System.out.println("=====================================");
 		System.out.println(board.print());

@@ -381,4 +381,9 @@ public class SudokuBoard {
 		return new SudokuBoard(cellsToMark);
 	}
 
+	public List<SudokuBoard> inferCrossedAndMark(int number) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
