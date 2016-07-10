@@ -329,6 +329,31 @@ public class SudokuSolverTest {
 			"183264957");
 	}
 
+	@Test
+	//1 e 2 resolvidos
+	public void solveHardProblemPartSolved() {
+		assertSolve(
+			"001038725|" +
+			"835729146|" +
+			"200051398|" + 
+			"012506400|" +
+			"600302001|" +
+			"009107602|" +
+			"426970810|" +
+			"000810264|" +
+			"100264000",
+			
+			"961438725|" +
+			"835729146|" +
+			"274651398|" + 
+			"712568439|" +
+			"648392571|" +
+			"359147682|" +
+			"426975813|" +
+			"597813264|" +
+			"183264957");
+	}
+	
 	private void assertSolve(String boardRepresentation) {
 		assertSolve(boardRepresentation, SOLUTION_REPRESENTATION);
 	}
