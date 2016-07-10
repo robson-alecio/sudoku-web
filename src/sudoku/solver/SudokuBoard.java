@@ -242,8 +242,10 @@ public class SudokuBoard {
 		
 		for (BoardSector sector : BoardSector.values()) {
 			int line = evalLine(number, sector);
-			if (line > -1)
+			if (line > -1) {
 				inferedLinesForNumber.add(line);
+				log(number, "linha", sector);
+			}
 		}
 
 
@@ -262,6 +264,10 @@ public class SudokuBoard {
 		}
 		
 		return list;
+	}
+
+	private void log(int number, String type, BoardSector sector) {
+		System.out.printf("Inferido %d em %s do setor %s.\n", number, type, sector);
 	}
 
 	private int evalLine(int number, BoardSector sector) {
@@ -291,8 +297,11 @@ public class SudokuBoard {
 		
 		for (BoardSector sector : BoardSector.values()) {
 			int column = evalColumn(number, sector);
-			if (column > -1)
+			if (column > -1) {
 				inferedColumnsForNumber.add(column);
+				log(number, "coluna", sector);
+			}
+
 		}
 
 
@@ -315,8 +324,8 @@ public class SudokuBoard {
 	private int evalColumn(int number, BoardSector sector) {
 		int targetColumn = -1;
 		
-		for (int line = sector.getStart().line; line <= sector.getEnd().line; line++) {
-			for (int column = sector.getStart().column; column <= sector.getEnd().column; column++) {
+		for (int column = sector.getStart().column; column <= sector.getEnd().column; column++) {
+			for (int line = sector.getStart().line; line <= sector.getEnd().line; line++) {
 				int cellValue = cells[line][column];
 				if (cellValue == number)
 					return -1;

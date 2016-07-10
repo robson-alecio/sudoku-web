@@ -106,47 +106,26 @@ public class SudokuSolver {
 	private SudokuBoard fillUsingLinesAndColumnInferedHeuristic(SudokuBoard actualProposal) {
 		SudokuBoard solutionProposal = actualProposal.copy();
 		
-		boolean changesHappened = false;
+		String initialRepresentation = solutionProposal.getRepresentation();
 		do {
-			changesHappened = false;
+			initialRepresentation = solutionProposal.getRepresentation();
 			for (int number = 1; number <= SudokuBoard.BOARD_SIZE; number++) {
 				SudokuBoard markedBoard = solutionProposal.simpleMark(number);
 				log(number, markedBoard);
-				for (BoardSector sector: BoardSector.values()) {
-					BoardPoint point = markedBoard.eval(number, sector);
-					if (point != null) {
-						solutionProposal = solutionProposal.set(number, point);
-						changesHappened = true;
-					}
+				solutionProposal = fillOnCellLeftWith(number, solutionProposal, markedBoard);
+				
+				List<SudokuBoard> inferedLinesBoards = markedBoard.inferLinesAndMark(number);
+				for (SudokuBoard inferedLinesMarkedBoard : inferedLinesBoards) {
+					log(number, inferedLinesMarkedBoard);
+					solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedLinesMarkedBoard);
 				}
-				if (!changesHappened) {
-					List<SudokuBoard> inferedLinesBoards = markedBoard.inferLinesAndMark(number);
-					for (SudokuBoard inferedLinesMarkedBoard : inferedLinesBoards) {
-						log(number, inferedLinesMarkedBoard);
-						for (BoardSector sector: BoardSector.values()) {
-							BoardPoint point = inferedLinesMarkedBoard.eval(number, sector);
-							if (point != null) {
-								solutionProposal = solutionProposal.set(number, point);
-								changesHappened = true;
-							}
-						}
-					}
-				}
-				if (!changesHappened) {
-					List<SudokuBoard> inferedColumnsBoards = markedBoard.inferColumnsAndMark(number);
-					for (SudokuBoard inferedColumnsMarkedBoard : inferedColumnsBoards) {
-						log(number, inferedColumnsMarkedBoard);
-						for (BoardSector sector: BoardSector.values()) {
-							BoardPoint point = inferedColumnsMarkedBoard.eval(number, sector);
-							if (point != null) {
-								solutionProposal = solutionProposal.set(number, point);
-								changesHappened = true;
-							}
-						}
-					}
+				List<SudokuBoard> inferedColumnsBoards = markedBoard.inferColumnsAndMark(number);
+				for (SudokuBoard inferedColumnsMarkedBoard : inferedColumnsBoards) {
+					log(number, inferedColumnsMarkedBoard);
+					solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);
 				}
 			}
-		} while (changesHappened);
+		} while (!solutionProposal.getRepresentation().equals(initialRepresentation));
 	
 		return solutionProposal;
 	}
