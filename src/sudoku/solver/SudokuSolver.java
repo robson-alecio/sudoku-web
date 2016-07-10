@@ -65,34 +65,40 @@ public class SudokuSolver {
 
 	private SudokuBoard fillOneCellLeftOnSectors(SudokuBoard solutionProposal) {
 		for (int number = 1; number <= SudokuBoard.BOARD_SIZE; number++) {
-			for (BoardSector sector: BoardSector.values()) {
-				BoardPoint targetPoint = solutionProposal.eval(number, sector);
-				if (targetPoint != null) {
-					return solutionProposal.set(number, targetPoint);
-				}
+			solutionProposal = fillOnCellLeftWith(number, solutionProposal);
+		}
+		return solutionProposal;
+	}
+	
+	private SudokuBoard fillOnCellLeftWith(int number, SudokuBoard actualProposal) {
+		return fillOnCellLeftWith(number, actualProposal, actualProposal);
+	}
+	
+	private SudokuBoard fillOnCellLeftWith(int number, SudokuBoard actualProposal, SudokuBoard evalBoard) {
+		SudokuBoard solutionProposal = actualProposal.copy();
+		
+		for (BoardSector sector: BoardSector.values()) {
+			BoardPoint targetPoint = evalBoard.eval(number, sector);
+			if (targetPoint != null) {
+				solutionProposal = solutionProposal.set(number, targetPoint);
 			}
 		}
+		
 		return solutionProposal;
 	}
 
 	private SudokuBoard fillUsingSimpleMarkHeuristic(SudokuBoard actualProposal) {
 		SudokuBoard solutionProposal = actualProposal.copy();
 		
-		boolean changesHappened = false;
+		String initialRepresentation = solutionProposal.getRepresentation();
 		do {
-			changesHappened = false;
+			initialRepresentation = solutionProposal.getRepresentation();
 			for (int number = 1; number <= SudokuBoard.BOARD_SIZE; number++) {
 				SudokuBoard markedBoard = solutionProposal.simpleMark(number);
 				log(number, markedBoard);
-				for (BoardSector sector: BoardSector.values()) {
-					BoardPoint point = markedBoard.eval(number, sector);
-					if (point != null) {
-						solutionProposal = solutionProposal.set(number, point);
-						changesHappened = true;
-					}
-				}
+				solutionProposal = fillOnCellLeftWith(number, solutionProposal, markedBoard);
 			}
-		} while (changesHappened);
+		} while (!solutionProposal.getRepresentation().equals(initialRepresentation));
 		
 		return solutionProposal;
 	}
@@ -146,12 +152,12 @@ public class SudokuSolver {
 	}
 
 	private void log(SudokuBoard board) {
-		System.out.println("===================================");
+		System.out.println("=====================================");
 		System.out.println(board.print());
 	}
 	
 	private void log(int number, SudokuBoard board) {
-		System.out.println("===================================");
+		System.out.println("=====================================");
 		System.out.printf("Analizando numero: %d\n", number);
 		System.out.println(board.print());
 	}
