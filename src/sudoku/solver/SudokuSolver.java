@@ -115,12 +115,6 @@ public class SudokuSolver {
 				solutionProposal = fillOnCellLeftWith(number, solutionProposal, markedBoard);
 				log(solutionProposal);
 				
-				solutionProposal = applyLineInference(solutionProposal, number);
-				log(solutionProposal);
-				
-				solutionProposal = applyColumnInference(solutionProposal, number);
-				log(solutionProposal);
-				
 				solutionProposal = applyRecursiveInference(solutionProposal, number);
 				log(solutionProposal);
 				
@@ -131,26 +125,6 @@ public class SudokuSolver {
 			}
 		} while (!solutionProposal.getRepresentation().equals(initialRepresentation));
 	
-		return solutionProposal;
-	}
-
-	private SudokuBoard applyLineInference(SudokuBoard solutionProposal, int number) {
-		List<SudokuBoard> inferedLinesBoards = solutionProposal.simpleMark(number).inferLinesAndMark(number);
-		for (SudokuBoard inferedLinesMarkedBoard : inferedLinesBoards) {
-			log(number, inferedLinesMarkedBoard);
-			solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedLinesMarkedBoard);
-			log(solutionProposal);
-		}
-		return solutionProposal;
-	}
-
-	private SudokuBoard applyColumnInference(SudokuBoard solutionProposal, int number) {
-		List<SudokuBoard> inferedColumnsBoards = solutionProposal.simpleMark(number).inferColumnsAndMark(number);
-		for (SudokuBoard inferedColumnsMarkedBoard : inferedColumnsBoards) {
-			log(number, inferedColumnsMarkedBoard);
-			solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);
-			log(solutionProposal);
-		}
 		return solutionProposal;
 	}
 
