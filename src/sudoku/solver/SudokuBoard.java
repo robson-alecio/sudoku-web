@@ -397,4 +397,8 @@ public class SudokuBoard {
 		return list;
 	}
 
+	public int getValue(int line, int column) {
+		return cells[line][column];
+	}
+
 }

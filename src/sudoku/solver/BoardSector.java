@@ -33,4 +33,11 @@ enum BoardSector {
 	public BoardPoint getEnd() {
 		return end;
 	}
+
+	public String getCssClass() {
+		if (this == TOP_CENTER || this == MIDDLE_LEFT || this == BoardSector.MIDDLE_RIGHT || this == BoardSector.BOTTOM_CENTER)
+			return "alternate";
+		
+		return "normal";
+	}
 }
