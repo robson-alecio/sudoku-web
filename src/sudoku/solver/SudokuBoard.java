@@ -342,46 +342,7 @@ public class SudokuBoard {
 		return targetColumn;
 	}
 
-	public SudokuBoard inferFullPlan(int number) {
-		List<Integer> inferedLinesForNumber = new ArrayList<>();
-		List<Integer> inferedColumnsForNumber = new ArrayList<>();
-		
-		for (BoardSector sector : BoardSector.values()) {
-			int line = evalLine(number, sector);
-			if (line > -1) {
-				inferedLinesForNumber.add(line);
-				log(number, "linha", line, sector);
-			}
-
-			int column = evalColumn(number, sector);
-			if (column > -1) {
-				inferedColumnsForNumber.add(column);
-				log(number, "coluna", column, sector);
-			}
-		}
-
-		int[][] cellsToMark = copyCells(cells);
-
-		for (int line : inferedLinesForNumber) {
-			for (int column = 0; column < BOARD_SIZE; column++) {
-				if (cellsToMark[line][column] == EMPTY_VALUE) {
-					cellsToMark[line][column] = INFERED_MARK_VALUE;
-				}
-			}
-		}
-
-		for (int column : inferedColumnsForNumber) {
-			for (int line = 0; line < BOARD_SIZE; line++) {
-				if (cellsToMark[line][column] == EMPTY_VALUE) {
-					cellsToMark[line][column] = INFERED_MARK_VALUE;
-				}
-			}
-		}
-		
-		return new SudokuBoard(cellsToMark);
-	}
-
-	public List<SudokuBoard> inferRecursieAndMark(int number) {
+	public List<SudokuBoard> inferRecursiveAndMark(int number) {
 		List<SudokuBoard> list = new ArrayList<>();
 		
 		list.addAll(inferLinesAndMark(number));
@@ -389,7 +350,7 @@ public class SudokuBoard {
 
 		List<SudokuBoard> sublists = new ArrayList<>();
 		for (SudokuBoard inferedBoard : list) {
-			sublists.addAll(inferedBoard.inferRecursieAndMark(number));
+			sublists.addAll(inferedBoard.inferRecursiveAndMark(number));
 		}
 		
 		list.addAll(sublists);
