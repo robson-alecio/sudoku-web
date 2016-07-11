@@ -8,7 +8,7 @@ public class SudokuPuzzleInMemoryRepository extends SudokuPuzzleRepository {
 	private Map<String, SudokuPuzzle> data;
 	
 	public SudokuPuzzleInMemoryRepository() {
-		data = new HashMap<>();
+		clear();
 	}
 
 	@Override
@@ -26,6 +26,11 @@ public class SudokuPuzzleInMemoryRepository extends SudokuPuzzleRepository {
 	@Override
 	public SudokuPuzzle find(String boardRepresentation) {
 		return data.get(boardRepresentation);
+	}
+
+	@Override
+	public void clear() {
+		data = new HashMap<>();
 	}
 
 }

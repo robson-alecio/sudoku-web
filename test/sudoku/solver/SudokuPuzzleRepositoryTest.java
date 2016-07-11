@@ -2,26 +2,27 @@ package sudoku.solver;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public abstract class SudokuPuzzleRepositoryTest {
 
-	private static final String BOARD_REPRESENTATION = "100000000|000000000|000000000|000000000|000000000|000000000|000000000|000000000|000000000";
+	private static final String PROBLEM_REPRESENTATION =  "300000078|000008340|800204500|030080420|200060001|048010030|003805002|059700000|180000004";
+	private static final String SOLUTION_REPRESENTATION = "314659278|526178349|897234516|631987425|275463981|948512637|763845192|459721863|182396754";
 
-	private SudokuPuzzleRepository repository;
+	protected SudokuPuzzleRepository repository;
 	
-	@Mock
-	private SudokuPuzzle puzzleMock;
+	private SudokuPuzzle puzzleSpy;
 	
-	@Mock
-	private SudokuBoard problemBoardMock;
+	private SudokuBoard problemSpy;
+	private SudokuBoard solutionSpy;
 
 	
 	@Before
@@ -29,41 +30,53 @@ public abstract class SudokuPuzzleRepositoryTest {
 		MockitoAnnotations.initMocks(this);
 		
 		repository = getRepository();
+		repository.clear();
 
-		when(problemBoardMock.getRepresentation()).thenReturn(BOARD_REPRESENTATION);
-		when(puzzleMock.getProblem()).thenReturn(problemBoardMock);
+		problemSpy = spy(new SudokuBoard(PROBLEM_REPRESENTATION));
+		solutionSpy = spy(new SudokuBoard(SOLUTION_REPRESENTATION));
+		
+		puzzleSpy = spy(new SudokuPuzzle(problemSpy, solutionSpy));
+	}
+	
+	@After
+	public void tearDown() {
+		repository.clear();
 	}
 	
 	protected abstract SudokuPuzzleRepository getRepository();
 	
 	@Test
 	public void saveNewPuzzle() {
-		assertThat(repository.save(puzzleMock)).isEqualTo(true);
+		assertThat(repository.save(puzzleSpy)).isEqualTo(true);
 		
-		verify(problemBoardMock, atLeast(2)).getRepresentation();
-		verify(puzzleMock, atLeast(1)).getProblem();
-		verifyNoMoreInteractions(problemBoardMock, puzzleMock);
+		verify(problemSpy, atLeast(2)).getRepresentation();
+		verify(puzzleSpy, atLeast(1)).getProblem();
+		verify(puzzleSpy, atMost(1)).getSolution();
+		verifyNoMoreInteractions(problemSpy, puzzleSpy);
 	}
 	
 	@Test
 	public void canNotSavePuzzleRepeatedly() {
-		repository.save(puzzleMock);
-		assertThat(repository.save(puzzleMock)).isEqualTo(false);
+		repository.save(puzzleSpy);
+		assertThat(repository.save(puzzleSpy)).isEqualTo(false);
 		
-		verify(problemBoardMock, atLeast(3)).getRepresentation();
-		verify(puzzleMock, atLeast(2)).getProblem();
-		verifyNoMoreInteractions(problemBoardMock, puzzleMock);
+		verify(problemSpy, atLeast(3)).getRepresentation();
+		verify(puzzleSpy, atLeast(2)).getProblem();
+		verify(puzzleSpy, atMost(1)).getSolution();
+		verifyNoMoreInteractions(problemSpy, puzzleSpy);
 	}
 	
 	@Test
 	public void nullOnSearchNewProblem() {
-		assertThat(repository.find(BOARD_REPRESENTATION)).isNull();
+		assertThat(repository.find(PROBLEM_REPRESENTATION)).isNull();
 	}
 	
 	@Test
 	public void findPuzzle() {
-		repository.save(puzzleMock);
+		repository.save(puzzleSpy);
 		
-		assertThat(repository.find(BOARD_REPRESENTATION)).isSameAs(puzzleMock);
+		SudokuPuzzle recoverdPuzzle = repository.find(PROBLEM_REPRESENTATION);
+		assertThat(recoverdPuzzle.getProblem().getRepresentation()).isEqualTo(PROBLEM_REPRESENTATION);
+		assertThat(recoverdPuzzle.getSolution().getRepresentation()).isEqualTo(SOLUTION_REPRESENTATION);
 	}
 }

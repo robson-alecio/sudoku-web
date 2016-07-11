@@ -10,7 +10,7 @@ public abstract class SudokuPuzzleRepository {
 	
 	public static SudokuPuzzleRepository getInstance() {
 		if (instance == null)
-			instance = new SudokuPuzzleInMemoryRepository();
+			instance = new SudokuPuzzlePostgresRepository("localhost", 5432, "sudoku-web", "sudoku", "sudoku");
 		
 		return instance;
 	}
@@ -18,5 +18,7 @@ public abstract class SudokuPuzzleRepository {
 	public abstract boolean save(SudokuPuzzle puzzle);
 	
 	public abstract SudokuPuzzle find(String boardRepresentation);
+
+	public abstract void clear();
 
 }
