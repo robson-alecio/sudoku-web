@@ -18,7 +18,6 @@ public class SudokuSolver {
 	}
 
 	public SudokuPuzzle solve(String boardRepresentation) {
-		
 		SudokuPuzzle puzzleSaved = SudokuPuzzleRepository.getInstance().find(boardRepresentation);
 		if (puzzleSaved != null)
 			return puzzleSaved;
@@ -56,10 +55,6 @@ public class SudokuSolver {
 		SudokuBoard brandNewProposal = fillUsingLinesAndColumnInferedHeuristic(freshNewProposal);
 		
 		log(brandNewProposal);
-		
-		if (brandNewProposal.isSolved())
-			return brandNewProposal;
-		
 		return brandNewProposal;
 	}
 
