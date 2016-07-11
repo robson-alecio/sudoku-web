@@ -32,6 +32,156 @@ public class SudokuPuzzleTest {
 		
 		SudokuPuzzle puzzle = new SudokuPuzzle(problem, solution);
 		
-		assertThat(puzzle.printHtml()).isEqualTo("");
+		assertThat(puzzle.printHtml()).isEqualTo(
+				"<center>\n" + 
+				"<table><tr><td class=\"normal\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"normal\"><center><b><u>1</u></b></center></td>\n" + 
+				"<td class=\"normal\"><center>3</center></td>\n" + 
+				"<td class=\"normal\"><center>4</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center>9</center></td>\n" + 
+				"<td class=\"normal\"><center>5</center></td>\n" + 
+				"<td class=\"normal\"><center><b><u>2</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center>6</center></td>\n" + 
+				"<td class=\"normal\"><center><b><u>8</u></b></center></td>\n" + 
+				"<td class=\"normal\"><center>7</center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"<td class=\"alternate\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"alternate\"><center>6</center></td>\n" + 
+				"<td class=\"alternate\"><center>2</center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>8</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center>1</center></td>\n" + 
+				"<td class=\"alternate\"><center>3</center></td>\n" + 
+				"<td class=\"alternate\"><center>7</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center><b><u>5</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>4</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>9</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"<td class=\"normal\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"normal\"><center>5</center></td>\n" + 
+				"<td class=\"normal\"><center>7</center></td>\n" + 
+				"<td class=\"normal\"><center><b><u>9</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center>4</center></td>\n" + 
+				"<td class=\"normal\"><center>6</center></td>\n" + 
+				"<td class=\"normal\"><center><b><u>8</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center>3</center></td>\n" + 
+				"<td class=\"normal\"><center>1</center></td>\n" + 
+				"<td class=\"normal\"><center>2</center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"alternate\"><center>5</center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>4</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center>6</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center><b><u>3</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center>7</center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>9</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center>8</center></td>\n" + 
+				"<td class=\"alternate\"><center>2</center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>1</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"<td class=\"normal\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"normal\"><center><b><u>2</u></b></center></td>\n" + 
+				"<td class=\"normal\"><center>7</center></td>\n" + 
+				"<td class=\"normal\"><center>1</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center>4</center></td>\n" + 
+				"<td class=\"normal\"><center>8</center></td>\n" + 
+				"<td class=\"normal\"><center>6</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center>3</center></td>\n" + 
+				"<td class=\"normal\"><center>9</center></td>\n" + 
+				"<td class=\"normal\"><center><b><u>5</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"<td class=\"alternate\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"alternate\"><center><b><u>9</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center>8</center></td>\n" + 
+				"<td class=\"alternate\"><center>3</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center><b><u>2</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center>5</center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>1</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center>6</center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>4</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center>7</center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"normal\"><center>4</center></td>\n" + 
+				"<td class=\"normal\"><center>6</center></td>\n" + 
+				"<td class=\"normal\"><center>8</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center><b><u>7</u></b></center></td>\n" + 
+				"<td class=\"normal\"><center>9</center></td>\n" + 
+				"<td class=\"normal\"><center>5</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center><b><u>2</u></b></center></td>\n" + 
+				"<td class=\"normal\"><center>1</center></td>\n" + 
+				"<td class=\"normal\"><center>3</center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"<td class=\"alternate\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"alternate\"><center><b><u>9</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>1</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center><b><u>2</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center>8</center></td>\n" + 
+				"<td class=\"alternate\"><center>6</center></td>\n" + 
+				"<td class=\"alternate\"><center>3</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"alternate\"><center><b><u>7</u></b></center></td>\n" + 
+				"<td class=\"alternate\"><center>5</center></td>\n" + 
+				"<td class=\"alternate\"><center>4</center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"<td class=\"normal\">\n" + 
+				"<table>\n" + 
+				"<tr><td class=\"normal\"><center>7</center></td>\n" + 
+				"<td class=\"normal\"><center><b><u>3</u></b></center></td>\n" + 
+				"<td class=\"normal\"><center>5</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center><b><u>1</u></b></center></td>\n" + 
+				"<td class=\"normal\"><center>2</center></td>\n" + 
+				"<td class=\"normal\"><center>4</center></td>\n" + 
+				"</tr>\n" + 
+				"<tr><td class=\"normal\"><center>8</center></td>\n" + 
+				"<td class=\"normal\"><center>9</center></td>\n" + 
+				"<td class=\"normal\"><center><b><u>6</u></b></center></td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</td>\n" + 
+				"</tr>\n" + 
+				"</table>\n" + 
+				"</center>");
 	}
 }

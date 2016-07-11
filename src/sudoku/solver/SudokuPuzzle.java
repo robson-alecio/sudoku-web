@@ -26,35 +26,35 @@ public class SudokuPuzzle {
 
 	public String printHtml() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<table>");
+		sb.append("<center>\n<table>");
 		
 		sb.append("<tr>");
 		sb.append(createCellFor(BoardSector.TOP_LEFT));
 		sb.append(createCellFor(BoardSector.TOP_CENTER));
 		sb.append(createCellFor(BoardSector.TOP_RIGHT));
-		sb.append("</tr>");
+		sb.append("</tr>\n");
 
 		sb.append("<tr>");
 		sb.append(createCellFor(BoardSector.MIDDLE_LEFT));
 		sb.append(createCellFor(BoardSector.MIDDLE_CENTER));
 		sb.append(createCellFor(BoardSector.MIDDLE_RIGHT));
-		sb.append("</tr>");
+		sb.append("</tr>\n");
 		
 		sb.append("<tr>");
 		sb.append(createCellFor(BoardSector.BOTTOM_LEFT));
 		sb.append(createCellFor(BoardSector.BOTTOM_CENTER));
 		sb.append(createCellFor(BoardSector.BOTTOM_RIGHT));
-		sb.append("</tr>");
+		sb.append("</tr>\n");
 		
-		sb.append("</table>");
+		sb.append("</table>\n</center>");
 		return sb.toString();
 	}
 
 	private String createCellFor(BoardSector sector) {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("<td class=\"").append(sector.getCssClass()).append("\">");
-		sb.append("<table class=\"inner-table\">");
+		sb.append("<td class=\"").append(sector.getCssClass()).append("\">\n");
+		sb.append("<table>\n");
 		
 		for (int line = sector.getStart().line; line <= sector.getEnd().line; line++) {
 			sb.append("<tr>");
@@ -64,16 +64,16 @@ public class SudokuPuzzle {
 				
 				boolean originalValue = problemValue == solutionValue;
 				
-				String format = originalValue ? "<b>%d</b>" : "%d";
+				String format = originalValue ? "<b><u>%d</u></b>" : "%d";
 				String printNumber = String.format(format, solutionValue);
 				
-				sb.append("<td><center>").append(printNumber).append("</center></td>");
+				sb.append("<td class=\"").append(sector.getCssClass()).append("\"><center>").append(printNumber).append("</center></td>\n");
 			}
-			sb.append("</tr>");
+			sb.append("</tr>\n");
 		}
 		
-		sb.append("</table>");
-		sb.append("</td>");
+		sb.append("</table>\n");
+		sb.append("</td>\n");
 		
 		return sb.toString();
 	}
