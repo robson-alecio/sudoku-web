@@ -121,7 +121,7 @@ public class SudokuSolver {
 				solutionProposal = applyColumnInference(solutionProposal, number);
 				log(solutionProposal);
 				
-				solutionProposal = applyCrossedInference(solutionProposal, number);
+				solutionProposal = applyRecursiveInference(solutionProposal, number);
 				log(solutionProposal);
 				
 				SudokuBoard fullPlan = solutionProposal.simpleMark(number).inferFullPlan(number);
@@ -154,8 +154,8 @@ public class SudokuSolver {
 		return solutionProposal;
 	}
 
-	private SudokuBoard applyCrossedInference(SudokuBoard solutionProposal, int number) {
-		List<SudokuBoard> crossedInferedBoards = solutionProposal.simpleMark(number).inferCrossedAndMark(number);
+	private SudokuBoard applyRecursiveInference(SudokuBoard solutionProposal, int number) {
+		List<SudokuBoard> crossedInferedBoards = solutionProposal.simpleMark(number).inferRecursieAndMark(number);
 		for (SudokuBoard inferedColumnsMarkedBoard : crossedInferedBoards) {
 			log(number, inferedColumnsMarkedBoard);
 			solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);

@@ -381,9 +381,20 @@ public class SudokuBoard {
 		return new SudokuBoard(cellsToMark);
 	}
 
-	public List<SudokuBoard> inferCrossedAndMark(int number) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SudokuBoard> inferRecursieAndMark(int number) {
+		List<SudokuBoard> list = new ArrayList<>();
+		
+		list.addAll(inferLinesAndMark(number));
+		list.addAll(inferColumnsAndMark(number));
+
+		List<SudokuBoard> sublists = new ArrayList<>();
+		for (SudokuBoard inferedBoard : list) {
+			sublists.addAll(inferedBoard.inferRecursieAndMark(number));
+		}
+		
+		list.addAll(sublists);
+		
+		return list;
 	}
 
 }
