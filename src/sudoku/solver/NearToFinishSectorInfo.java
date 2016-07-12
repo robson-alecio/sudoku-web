@@ -50,9 +50,25 @@ class NearToFinishSectorInfo {
 	}
 
 	private List<List<Integer>> generateSequencesOfMissingNumbers() {
+		return generateShuffleSequencesFrom(missingNumbers, 0);
+	}
+
+	private List<List<Integer>> generateShuffleSequencesFrom(List<Integer> sequence, int startIndex) {
 		List<List<Integer>> sequences = new ArrayList<>();
 		
-		//????
+		if (startIndex == sequence.size() - 1)
+			return sequences;
+		
+		sequences.add(sequence);
+		
+		for (int i = startIndex + 1; i < sequence.size(); i++) {
+			List<Integer> shuffle = new ArrayList<>(sequence);
+			Integer value = shuffle.remove(i);
+			shuffle.add(startIndex, value);
+			sequences.add(shuffle);
+			
+			sequences.addAll(generateShuffleSequencesFrom(shuffle, startIndex + 1));
+		}
 		
 		return sequences;
 	}

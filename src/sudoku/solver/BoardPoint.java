@@ -11,4 +11,9 @@ class BoardPoint {
 		this.column = column;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("(%d, %d)", line, column);
+	}
+	
 }
