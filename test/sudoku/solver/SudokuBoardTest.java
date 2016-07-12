@@ -153,4 +153,37 @@ public class SudokuBoardTest {
 		SudokuBoard solution = new SudokuBoard("781429653|642853971|935176824|167985342|329741568|854632197|496317285|518294736|273568419");
 		assertThat(solution.isSolved()).isTrue();
 	}
+	
+	@Test
+	public void findNearToFinishSector() {
+		SudokuBoard board = new SudokuBoard("900002070|420000193|600904050|004708900|079103080|802490731|090001000|046300809|050049007");
+		
+		NearToFinishSectorInfo info = board.findNearToFinishSector();
+		
+		assertThat(info.getSector()).isEqualTo(BoardSector.MIDDLE_CENTER);
+		
+		List<Integer> missingNumbers = info.getMissingNumbers();
+		assertThat(missingNumbers).hasSize(3);
+		assertThat(missingNumbers.get(0)).isEqualTo(2);
+		assertThat(missingNumbers.get(1)).isEqualTo(5);
+		assertThat(missingNumbers.get(2)).isEqualTo(6);
+		
+		List<BoardPoint> emptyCells = info.getEmptyCells();
+		assertThat(emptyCells).hasSize(3);
+		assertPoint(emptyCells.get(0), 3, 4);
+		assertPoint(emptyCells.get(1), 4, 4);
+		assertPoint(emptyCells.get(2), 5, 5);
+	}
+	
+	@Test
+	public void findNearToFinishSectorOnSolvedBoard() {
+		SudokuBoard solution = new SudokuBoard("781429653|642853971|935176824|167985342|329741568|854632197|496317285|518294736|273568419");
+		
+		assertThat(solution.findNearToFinishSector()).isNull();
+	}
+
+	private void assertPoint(BoardPoint boardPoint, int expectedLine, int expectedColumn) {
+		assertThat(boardPoint.line).isEqualTo(expectedLine);
+		assertThat(boardPoint.column).isEqualTo(expectedColumn);
+	}
 }

@@ -1,6 +1,8 @@
 package sudoku.solver;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class SudokuSolver {
 
@@ -40,22 +42,29 @@ public class SudokuSolver {
 		if (solutionProposal.isSolved())
 			return solutionProposal;
 		
-		SudokuBoard newProposal = fillOneCellLeftOnSectors(solutionProposal);
+		solutionProposal = fillOneCellLeftOnSectors(solutionProposal);
 		
-		log(newProposal);
-		if (newProposal.isSolved())
-			return newProposal;
+		log(solutionProposal);
+		if (solutionProposal.isSolved())
+			return solutionProposal;
 
-		SudokuBoard freshNewProposal = fillUsingSimpleMarkHeuristic(newProposal);
+		solutionProposal = fillUsingSimpleMarkHeuristic(solutionProposal);
 		
-		log(freshNewProposal);
-		if (freshNewProposal.isSolved())
-			return freshNewProposal;
+		log(solutionProposal);
+		if (solutionProposal.isSolved())
+			return solutionProposal;
 		
-		SudokuBoard brandNewProposal = fillUsingLinesAndColumnInferedHeuristic(freshNewProposal);
+		solutionProposal = fillUsingLinesAndColumnInferedHeuristic(solutionProposal);
 		
-		log(brandNewProposal);
-		return brandNewProposal;
+		log(solutionProposal);
+		if (solutionProposal.isSolved())
+			return solutionProposal;
+		
+		solutionProposal = fillUsingCombinationsOnMostFinishedSectorHeuristic(solutionProposal);
+		if (solutionProposal.isSolved())
+			return solutionProposal;
+		
+		return solutionProposal;
 	}
 
 	private SudokuBoard fillOneCellLeftOnSectors(SudokuBoard solutionProposal) {
@@ -115,6 +124,22 @@ public class SudokuSolver {
 			}
 		} while (!solutionProposal.getRepresentation().equals(initialRepresentation));
 	
+		return solutionProposal;
+	}
+
+	private SudokuBoard fillUsingCombinationsOnMostFinishedSectorHeuristic(SudokuBoard solutionProposal) {
+		NearToFinishSectorInfo candidateSectorInfo = solutionProposal.findNearToFinishSector();
+		List<Map<Integer, BoardPoint>> combinations = candidateSectorInfo.getCombinations();
+		for (Map<Integer, BoardPoint> combination : combinations) {
+			SudokuBoard combinationBoard = solutionProposal.copy();
+			for (Entry<Integer, BoardPoint> entry : combination.entrySet()) {
+				combinationBoard = combinationBoard.set(entry.getKey(), entry.getValue());
+			}
+			
+			SudokuBoard result = fillUsingLinesAndColumnInferedHeuristic(combinationBoard);
+			if (result.isSolved())
+				return result;
+		}
 		return solutionProposal;
 	}
 

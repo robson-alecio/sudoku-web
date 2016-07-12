@@ -362,4 +362,49 @@ public class SudokuBoard {
 		return cells[line][column];
 	}
 
+	public NearToFinishSectorInfo findNearToFinishSector() {
+		BoardSector sector = getNearToFinishSector();
+		
+		if (sector == null)
+			return null;
+		
+		List<Integer> missingNumbers = new ArrayList<>();
+		for (int number = 1; number < BOARD_SIZE; number++)
+			missingNumbers.add(number);
+		
+		List<BoardPoint> emptyCells = new ArrayList<>();
+		for (int line = sector.getStart().line; line <= sector.getEnd().line; line++) {
+			for (int column = sector.getStart().column; column <= sector.getEnd().column; column++) {
+				if (cells[line][column] == EMPTY_VALUE) {
+					emptyCells.add(new BoardPoint(line, column));
+				} else {
+					missingNumbers.remove(new Integer(cells[line][column]));
+				}
+			}
+		}
+		
+		return new NearToFinishSectorInfo(sector, missingNumbers, emptyCells);
+	}
+
+	private BoardSector getNearToFinishSector() {
+		int minEmptyCells = 10;
+		BoardSector sector = null;
+		
+		for (BoardSector candidateSector : BoardSector.values()) {
+			int emptyCells = 0;
+			for (int line = candidateSector.getStart().line; line <= candidateSector.getEnd().line; line++) {
+				for (int column = candidateSector.getStart().column; column <= candidateSector.getEnd().column; column++) {
+					if (cells[line][column] == EMPTY_VALUE)
+						emptyCells++;
+				}
+			}
+			if (emptyCells > 0 && emptyCells < minEmptyCells) {
+				sector = candidateSector;
+				minEmptyCells = emptyCells;
+			}
+		}
+		
+		return sector;
+	}
+
 }
