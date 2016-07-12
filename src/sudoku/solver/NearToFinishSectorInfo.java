@@ -60,6 +60,11 @@ class NearToFinishSectorInfo {
 			return sequences;
 		
 		sequences.add(sequence);
+		List<List<Integer>> subSequences = generateShuffleSequencesFrom(sequence, startIndex + 1);
+		if (subSequences.contains(sequence))
+			subSequences.remove(sequence);
+		
+		sequences.addAll(subSequences);
 		
 		for (int i = startIndex + 1; i < sequence.size(); i++) {
 			List<Integer> shuffle = new ArrayList<>(sequence);
@@ -67,7 +72,10 @@ class NearToFinishSectorInfo {
 			shuffle.add(startIndex, value);
 			sequences.add(shuffle);
 			
-			sequences.addAll(generateShuffleSequencesFrom(shuffle, startIndex + 1));
+			List<List<Integer>> innerSubSequences = generateShuffleSequencesFrom(shuffle, startIndex + 1);
+			if (innerSubSequences.contains(shuffle))
+				innerSubSequences.remove(shuffle);
+			sequences.addAll(innerSubSequences);
 		}
 		
 		return sequences;

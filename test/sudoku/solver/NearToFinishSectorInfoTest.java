@@ -33,28 +33,28 @@ public class NearToFinishSectorInfoTest {
 		
 		Map<Integer, BoardPoint> case2 = combinations.get(1);
 		assertPosition(case2, 2, 3, 4);
-		assertPosition(case2, 6, 4, 4);
 		assertPosition(case2, 5, 5, 5);
+		assertPosition(case2, 6, 4, 4);
 		
 		Map<Integer, BoardPoint> case3 = combinations.get(2);
+		assertPosition(case3, 2, 4, 4);
 		assertPosition(case3, 5, 3, 4);
-		assertPosition(case3, 6, 4, 4);
-		assertPosition(case3, 2, 5, 5);
+		assertPosition(case3, 6, 5, 5);
 		
 		Map<Integer, BoardPoint> case4 = combinations.get(3);
+		assertPosition(case4, 2, 5, 5);
 		assertPosition(case4, 5, 3, 4);
-		assertPosition(case4, 2, 4, 4);
-		assertPosition(case4, 6, 5, 5);
+		assertPosition(case4, 6, 4, 4);
 		
 		Map<Integer, BoardPoint> case5 = combinations.get(4);
-		assertPosition(case5, 6, 3, 4);
 		assertPosition(case5, 2, 4, 4);
 		assertPosition(case5, 5, 5, 5);
+		assertPosition(case5, 6, 3, 4);
 		
 		Map<Integer, BoardPoint> case6 = combinations.get(5);
-		assertPosition(case6, 6, 3, 4);
-		assertPosition(case6, 5, 4, 4);
 		assertPosition(case6, 2, 5, 5);
+		assertPosition(case6, 5, 4, 4);
+		assertPosition(case6, 6, 3, 4);
 	}
 
 	private void assertPosition(Map<Integer, BoardPoint> caseMap, int number, int expectedLine, int expectedColumn) {

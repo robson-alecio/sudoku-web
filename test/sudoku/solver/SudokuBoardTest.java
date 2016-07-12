@@ -152,6 +152,9 @@ public class SudokuBoardTest {
 		
 		SudokuBoard solution = new SudokuBoard("781429653|642853971|935176824|167985342|329741568|854632197|496317285|518294736|273568419");
 		assertThat(solution.isSolved()).isTrue();
+		
+		SudokuBoard solutionCase1 = new SudokuBoard("981532674|425876193|637914258|314728965|579163482|862495731|793281546|146357829|258649317");
+		assertThat(solutionCase1.isSolved()).isTrue();
 	}
 	
 	@Test

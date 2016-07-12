@@ -130,13 +130,15 @@ public class SudokuSolver {
 	private SudokuBoard fillUsingCombinationsOnMostFinishedSectorHeuristic(SudokuBoard solutionProposal) {
 		NearToFinishSectorInfo candidateSectorInfo = solutionProposal.findNearToFinishSector();
 		List<Map<Integer, BoardPoint>> combinations = candidateSectorInfo.getCombinations();
+		System.out.println("Antes das combinações...");
+		log(solutionProposal);
 		for (Map<Integer, BoardPoint> combination : combinations) {
 			SudokuBoard combinationBoard = solutionProposal.copy();
 			for (Entry<Integer, BoardPoint> entry : combination.entrySet()) {
 				combinationBoard = combinationBoard.set(entry.getKey(), entry.getValue());
 			}
 			
-			SudokuBoard result = fillUsingLinesAndColumnInferedHeuristic(combinationBoard);
+			SudokuBoard result = generateSolution(combinationBoard);
 			if (result.isSolved())
 				return result;
 		}
