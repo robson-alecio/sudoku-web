@@ -84,9 +84,8 @@ public class SudokuSolver {
 		
 		for (BoardSector sector: BoardSector.values()) {
 			BoardPoint targetPoint = evalBoard.eval(number, sector);
-			if (targetPoint != null) {
+			if (targetPoint != null)
 				solutionProposal = solutionProposal.set(number, targetPoint);
-			}
 		}
 		
 		return solutionProposal;
@@ -103,7 +102,7 @@ public class SudokuSolver {
 				log(number, markedBoard);
 				solutionProposal = fillOnCellLeftWith(number, solutionProposal, markedBoard);
 			}
-		} while (!solutionProposal.getRepresentation().equals(initialRepresentation));
+		} while (!solutionProposal.getRepresentation().equals(initialRepresentation) && !solutionProposal.isSolved());
 		
 		return solutionProposal;
 	}
@@ -118,12 +117,15 @@ public class SudokuSolver {
 				SudokuBoard markedBoard = solutionProposal.simpleMark(number);
 				log(number, markedBoard);
 				solutionProposal = fillOnCellLeftWith(number, solutionProposal, markedBoard);
+				
 				log(solutionProposal);
+				if (solutionProposal.isSolved())
+					return solutionProposal;
 				
 				solutionProposal = applyRecursiveInference(solutionProposal, number);
 				log(solutionProposal);
 			}
-		} while (!solutionProposal.getRepresentation().equals(initialRepresentation));
+		} while (!solutionProposal.getRepresentation().equals(initialRepresentation) && !solutionProposal.isSolved());
 	
 		return solutionProposal;
 	}
@@ -154,7 +156,10 @@ public class SudokuSolver {
 		for (SudokuBoard inferedColumnsMarkedBoard : crossedInferedBoards) {
 			log(number, inferedColumnsMarkedBoard);
 			solutionProposal = fillOnCellLeftWith(number, solutionProposal, inferedColumnsMarkedBoard);
+			
 			log(solutionProposal);
+			if (solutionProposal.isSolved())
+				return solutionProposal;
 		}
 		return solutionProposal;
 	}
