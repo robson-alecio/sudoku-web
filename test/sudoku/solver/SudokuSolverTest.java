@@ -202,6 +202,20 @@ public class SudokuSolverTest {
 	}
 	
 	@Test
+	public void alreadySolved() {
+		assertSolve(
+			"781429653|" +
+			"642853971|" +
+			"935176824|" + 
+			"167985342|" +
+			"329741568|" +
+			"854632197|" +
+			"496317285|" +
+			"518294736|" +
+			"273568419");
+	}
+	
+	@Test
 	public void solveWithTwoCellsLeftOnSameRow() {
 		assertSolve(
 			"781429653|" +
@@ -441,13 +455,13 @@ public class SudokuSolverTest {
 			
 			"758139642|" +
 			"613724985|" +
-			"924568713|" +
-			"149257368|" +
-			"862391574|" +
+			"924568731|" +
+			"149257863|" +
+			"862913574|" +
 			"375846129|" +
-			"497685231|" +
-			"281971456|" +
-			"536412897");
+			"497381256|" +
+			"231675498|" +
+			"586492317");
 	}
 	
 	private void assertSolve(String boardRepresentation) {

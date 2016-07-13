@@ -28,6 +28,7 @@ public class SudokuSolver {
 		SudokuBoard generatedSolution = generateSolution(problemBoard);
 		
 		SudokuPuzzle puzzle = new SudokuPuzzle(problemBoard, generatedSolution);
+		System.out.printf("Puzzle: %s\n", puzzle);
 		
 		SudokuPuzzleRepository.getInstance().save(puzzle);
 		
@@ -129,14 +130,17 @@ public class SudokuSolver {
 
 	private SudokuBoard fillUsingCombinationsOnMostFinishedSectorHeuristic(SudokuBoard solutionProposal) {
 		NearToFinishSectorInfo candidateSectorInfo = solutionProposal.findNearToFinishSector();
+		if (candidateSectorInfo == null)
+			return solutionProposal;
+		
 		List<Map<Integer, BoardPoint>> combinations = candidateSectorInfo.getCombinations();
-		System.out.println("Antes das combinações...");
+		System.out.println("Antes das combinações..."); 
 		log(solutionProposal);
 		for (Map<Integer, BoardPoint> combination : combinations) {
+			System.out.printf("Analisando combinação: %s.\n", combination);
 			SudokuBoard combinationBoard = solutionProposal.copy();
-			for (Entry<Integer, BoardPoint> entry : combination.entrySet()) {
+			for (Entry<Integer, BoardPoint> entry : combination.entrySet())
 				combinationBoard = combinationBoard.set(entry.getKey(), entry.getValue());
-			}
 			
 			SudokuBoard result = generateSolution(combinationBoard);
 			if (result.isSolved())

@@ -155,11 +155,23 @@ public class SudokuBoardTest {
 		
 		SudokuBoard solutionCase1 = new SudokuBoard("981532674|425876193|637914258|314728965|579163482|862495731|793281546|146357829|258649317");
 		assertThat(solutionCase1.isSolved()).isTrue();
+		
+		SudokuBoard solutionCase2 = new SudokuBoard("758139642|613724985|924568731|149257863|862913574|375846129|497381256|231675498|586492317");
+		assertThat(solutionCase2.isSolved()).isTrue();
 	}
 	
 	@Test
 	public void findNearToFinishSector() {
-		SudokuBoard board = new SudokuBoard("900002070|420000193|600904050|004708900|079103080|802490731|090001000|046300809|050049007");
+		SudokuBoard board = new SudokuBoard(
+				"900002070|" +
+				"420000193|" +
+				"600904050|" +
+				"004708900|" +
+				"079103080|" +
+				"802490731|" +
+				"090001000|" +
+				"046300809|" +
+				"050049007");
 		
 		NearToFinishSectorInfo info = board.findNearToFinishSector();
 		
@@ -176,6 +188,34 @@ public class SudokuBoardTest {
 		assertPoint(emptyCells.get(0), 3, 4);
 		assertPoint(emptyCells.get(1), 4, 4);
 		assertPoint(emptyCells.get(2), 5, 5);
+	}
+	
+	@Test
+	public void findNearToFinishSectorAdvancedCase() {
+		SudokuBoard board = new SudokuBoard(
+				"758030642|" +
+				"613724985|" +
+				"924568700|" +
+				"149257368|" +
+				"862000574|" +
+				"375846129|" +
+				"497080200|" +
+				"281070400|" +
+				"536402807");
+
+		NearToFinishSectorInfo info = board.findNearToFinishSector();
+		
+		assertThat(info.getSector()).isEqualTo(BoardSector.TOP_CENTER);
+		
+		List<Integer> missingNumbers = info.getMissingNumbers();
+		assertThat(missingNumbers).hasSize(2);
+		assertThat(missingNumbers.get(0)).isEqualTo(1);
+		assertThat(missingNumbers.get(1)).isEqualTo(9);
+		
+		List<BoardPoint> emptyCells = info.getEmptyCells();
+		assertThat(emptyCells).hasSize(2);
+		assertPoint(emptyCells.get(0), 0, 3);
+		assertPoint(emptyCells.get(1), 0, 5);
 	}
 	
 	@Test

@@ -369,7 +369,7 @@ public class SudokuBoard {
 			return null;
 		
 		List<Integer> missingNumbers = new ArrayList<>();
-		for (int number = 1; number < BOARD_SIZE; number++)
+		for (int number = 1; number <= BOARD_SIZE; number++)
 			missingNumbers.add(number);
 		
 		List<BoardPoint> emptyCells = new ArrayList<>();
